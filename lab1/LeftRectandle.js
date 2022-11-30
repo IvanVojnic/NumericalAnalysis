@@ -1,8 +1,12 @@
 const b = Math.sqrt(3);
 const a = 0;
-const eps = 0.0001;
+const eps = 0.00001;
 const exactResult = 1.22836969;
-const middleRectangleH = 0.004
+const middleRectangleH = 0.004;
+const max_deriv = 3150.6;
+const legendreRoot1 = 0;
+const legendreRoot2 = -1*Math.sqrt(3/5);
+const legendreRoot3 = Math.sqrt(3/5);
 
 function task1() {
     console.log("\n")
@@ -56,15 +60,14 @@ function task2() {
 
     myResult = middleRectangle(N)
 
-
     console.log("Результат = " + myResult)
     console.log("N = " + N)
     console.log("r = " + (exactResult - myResult))
 }
 
-task2()
+//task2()
 
-function trapezRule(N, h){
+function trapezeRule(N, h){
     let sum = 0;
     for(let i = 0; i <= N - 1; i++){
         sum += myFunc(h*i)
@@ -77,7 +80,7 @@ function task3() {
     let myResult = 0
     let h = 0.004;
     let N = b/h;
-    myResult = trapezRule(N, h)
+    myResult = trapezeRule(N, h)
 
 
     console.log("Результат = " + myResult)
@@ -85,4 +88,34 @@ function task3() {
     console.log("r = " + (exactResult - myResult))
 }
 
-task3()
+//task3()
+
+function getSummands(x) {
+    let legendre = LegendreDerivative(x);
+    let solution = (myFunc((a+b)/2 + x*(b-a)/2))/((1 - x*x)*legendre*legendre);
+    return solution
+}
+
+function LegendreDerivative(x){
+    return (3*(5*x*x-1)/2)
+}
+
+function error(){
+    let sol1 = (max_deriv * 2*2*2*2*2*2*2*2*2)/(40320 * 9);
+    let sol2 = ((24*24)/(40320*40320))*((24*24)/(40320*40320))
+    return sol1 * sol2;
+}
+
+function task4(){
+    let myResult = 0;
+    let myError = 0;
+    let val1 = getSummands(legendreRoot1);
+    let val2 = getSummands(legendreRoot2);
+    let val3 = getSummands(legendreRoot3);
+    myResult = (b-a)*(val1 + val2 + val3);
+    myError = error();
+    console.log("Результат = " + myResult)
+    console.log("Gauss r = " + (myError))
+    console.log("r = " + (exactResult - myResult))
+}
+task4()
